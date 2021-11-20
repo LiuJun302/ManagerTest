@@ -22,6 +22,9 @@ public class LeetCodeTrainning {
     /**
      * 1114. 按序打印
      */
+    public static void main1(String[] args) {
+
+    }
 
     class Foo {
 
