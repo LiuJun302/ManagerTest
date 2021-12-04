@@ -11,32 +11,106 @@ public class LeetCodeTrainning {
     public static void main(String[] args) {
         LeetCodeTrainning main = new LeetCodeTrainning();
 
-        //        String s = "ADOBECODEBANC";
-        //        String t = "ABC";
-        String s = "cabwefgewcwaefgcf";
-        String t = "cae";
-        System.out.println(main.integerReplacement(7));
+        int[] a1 = {1, 2, 6, 4, 8, 10, 9, 15};
+        System.out.println(main.findUnsortedSubarray(a1));
 
+    }
+
+
+    /**
+     * 581. 最短无序连续子数组
+     *
+     * @param nums
+     * @return
+     */
+    public int findUnsortedSubarray(int[] nums) {
+        int n = nums.length;
+        int maxn = Integer.MIN_VALUE, right = -1;
+        int minn = Integer.MAX_VALUE, left = -1;
+        for (int i = 0; i < n; i++) {
+            if (maxn > nums[i]) {
+                right = i;
+            } else {
+                maxn = nums[i];
+            }
+            if (minn < nums[n - i - 1]) {
+                left = n - i - 1;
+            } else {
+                minn = nums[n - i - 1];
+            }
+        }
+        return right == -1 ? 0 : right - left + 1;
+    }
+
+    /**
+     * 1446. 连续字符
+     *
+     * @param s
+     * @return
+     */
+    public int maxPower(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int ret = 1, idx = 1, tmp = 1;
+        while (idx < s.length()) {
+            if (s.charAt(idx) == s.charAt(idx - 1)) {
+                tmp++;
+            } else {
+                ret = Math.max(tmp, ret);
+                tmp = 1;
+            }
+            idx++;
+        }
+        return Math.max(ret, tmp);
+    }
+
+    /**
+     * 384. 打乱数组
+     */
+    class Solution {
+
+        int[] originNums;
+        int[] changedNums;
+        int n;
+
+        public Solution(int[] nums) {
+            n = nums.length;
+            originNums = nums;
+            changedNums = Arrays.copyOf(originNums, n);
+
+        }
+
+        public int[] reset() {
+            changedNums = Arrays.copyOf(originNums, n);
+            return changedNums;
+        }
+
+        public int[] shuffle() {
+            for (int i = 0; i < n; i++) {
+                int idx = i + (new Random()).nextInt(n - i);
+                int tmp = changedNums[i];
+                changedNums[i] = changedNums[idx];
+                changedNums[idx] = tmp;
+            }
+            return changedNums;
+        }
     }
 
     /**
      * 1114. 按序打印
      */
-    public static void main1(String[] args) {
-
-    }
-
     class Foo {
 
         AtomicInteger atomicInteger = new AtomicInteger(1);
+
         public Foo() {
 
         }
 
-
         public void first(Runnable printFirst) throws InterruptedException {
 
-            while (atomicInteger.get() != 1){
+            while (atomicInteger.get() != 1) {
             }
             // printFirst.run() outputs "first". Do not change or remove this line.
             printFirst.run();
@@ -45,7 +119,7 @@ public class LeetCodeTrainning {
         }
 
         public void second(Runnable printSecond) throws InterruptedException {
-            while (atomicInteger.get() != 2){
+            while (atomicInteger.get() != 2) {
             }
             // printSecond.run() outputs "second". Do not change or remove this line.
             printSecond.run();
@@ -54,7 +128,7 @@ public class LeetCodeTrainning {
 
         public void third(Runnable printThird) throws InterruptedException {
 
-            while (atomicInteger.get() != 3){
+            while (atomicInteger.get() != 3) {
             }
             // printThird.run() outputs "third". Do not change or remove this line.
             printThird.run();
@@ -68,8 +142,10 @@ public class LeetCodeTrainning {
      * @return
      */
     public int integerReplacement(int n) {
-        if (n == 1) return 0;
-        if (n % 2 == 0){
+        if (n == 1) {
+            return 0;
+        }
+        if (n % 2 == 0) {
             return 1 + integerReplacement(n / 2);
         } else {
             return 2 + Math.min(integerReplacement(n / 2), integerReplacement(n / 2 + 1));
@@ -83,12 +159,16 @@ public class LeetCodeTrainning {
      * @return
      */
     public int findTilt(TreeNode root) {
-        if (null == root) return 0;
+        if (null == root) {
+            return 0;
+        }
         return findTilt(root.left) + findTilt(root.right) + Math.abs(getNodeSum(root.right) - getNodeSum(root.left));
     }
 
     public int getNodeSum(TreeNode node) {
-        if (null == node) return 0;
+        if (null == node) {
+            return 0;
+        }
         return getNodeSum(node.left) + getNodeSum(node.right) + node.val;
     }
 
@@ -181,7 +261,9 @@ public class LeetCodeTrainning {
     }
 
     public int maxPathSumIter(TreeNode node) {
-        if (node == null) return 0;
+        if (node == null) {
+            return 0;
+        }
         int leftVal = Math.max(maxPathSumIter(node.left), 0);
         int rightVal = Math.max(maxPathSumIter(node.right), 0);
         int currVal = leftVal + rightVal + node.val;
@@ -256,17 +338,24 @@ public class LeetCodeTrainning {
      * @return
      */
     public String minWindow(String s, String t) {
-        if (s.length() == 0 || t.length() == 0 || s.length() < t.length()) return "";
+        if (s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return "";
+        }
         Map<Character, Integer> map = new HashMap<>();
-        for (char ch : t.toCharArray())
+        for (char ch : t.toCharArray()) {
             map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
         int begin = 0, end = 0, sIdx = 0, eIdx = Integer.MAX_VALUE;
         while (end < s.length()) {
             while (end < s.length()) {
                 char ch = s.charAt(end);
-                if (map.containsKey(ch)) map.put(ch, map.get(ch) - 1);
+                if (map.containsKey(ch)) {
+                    map.put(ch, map.get(ch) - 1);
+                }
                 end++;
-                if (checkMap(map)) break;
+                if (checkMap(map)) {
+                    break;
+                }
             }
             while (checkMap(map) && begin < end) {
                 char ch = s.charAt(begin);
@@ -284,13 +373,18 @@ public class LeetCodeTrainning {
                 sIdx = begin;
             }
         }
-        if (checkMap(map)) return s.substring(sIdx, eIdx);
-        else return "";
+        if (checkMap(map)) {
+            return s.substring(sIdx, eIdx);
+        } else {
+            return "";
+        }
     }
 
     public boolean checkMap(Map<Character, Integer> map) {
         for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-            if (entry.getValue() > 0) return false;
+            if (entry.getValue() > 0) {
+                return false;
+            }
         }
         return true;
     }
@@ -302,7 +396,9 @@ public class LeetCodeTrainning {
      * @return
      */
     public List<List<Integer>> levelOrder(TreeNode root) {
-        if (root == null) return new ArrayList<>();
+        if (root == null) {
+            return new ArrayList<>();
+        }
 
         List<List<Integer>> res = new ArrayList<>();
         Queue<TreeNode> queue = new ArrayDeque<>();
@@ -313,8 +409,12 @@ public class LeetCodeTrainning {
             while (!queue.isEmpty()) {
                 TreeNode node = queue.poll();
                 tmpRes.add(node.val);
-                if (node.left != null) tmp.add(node.left);
-                if (node.right != null) tmp.add(node.right);
+                if (node.left != null) {
+                    tmp.add(node.left);
+                }
+                if (node.right != null) {
+                    tmp.add(node.right);
+                }
             }
             res.add(tmpRes);
             queue = tmp;
@@ -433,7 +533,9 @@ public class LeetCodeTrainning {
             if (map != null) {
 
                 for (int time : map.keySet()) {
-                    if (time <= timestamp) return map.get(time);
+                    if (time <= timestamp) {
+                        return map.get(time);
+                    }
                 }
             }
             return "";
@@ -524,7 +626,9 @@ public class LeetCodeTrainning {
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (grid[i][j] == 1 && (rows[i] > 1 || cols[j] > 1)) cnt++;
+                if (grid[i][j] == 1 && (rows[i] > 1 || cols[j] > 1)) {
+                    cnt++;
+                }
             }
         }
 
@@ -543,11 +647,15 @@ public class LeetCodeTrainning {
      * @return
      */
     public int[] findErrorNums(int[] nums) {
-        if (nums.length < 2) return null;
+        if (nums.length < 2) {
+            return null;
+        }
         int[] res = new int[2];
         BitSet bitSet = new BitSet(nums.length);
         for (int num : nums) {
-            if (bitSet.get(num)) res[0] = num;
+            if (bitSet.get(num)) {
+                res[0] = num;
+            }
             bitSet.set(num, true);
         }
 
@@ -575,8 +683,9 @@ public class LeetCodeTrainning {
 
     public String arrangeWords(String text) {
         List<String> list = new ArrayList<>();
-        for (String s : text.split(" "))
+        for (String s : text.split(" ")) {
             list.add(s);
+        }
 
         Collections.sort(list, new Comparator<String>() {
             @Override
@@ -623,17 +732,25 @@ public class LeetCodeTrainning {
     }
 
     public String frequencySort1(String s) {
-        int a[] = new int[127];
-        byte s1[] = s.getBytes(), x;
-        for (byte k : s1) ++a[k];
+        int[]  a = new int[127];
+        byte[] s1 = s.getBytes();
+        int x;
+        for (byte k : s1) {
+            ++a[k];
+        }
         for (int i = -1, i1, j = 0; i != 0; ) {
             i1 = i = x = 0;
-            for (byte n = 32; n < 127; ++n)
+            byte n = 32;
+            while (n < 127) {
                 if (a[n] > i) {
                     i = a[n];
                     x = n;
                 }
-            for (i1 = i, a[x] = 0; 0 != i1--; s1[j++] = x) ;
+                ++n;
+            }
+            for (i1 = i, a[x] = 0; 0 != i1--; s1[j++] = (byte) x) {
+                ;
+            }
         }
         return new String(s1);
     }
@@ -780,7 +897,9 @@ public class LeetCodeTrainning {
     }
 
     private void insertRow(TreeNode node, int val, int depth, int curDepth) {
-        if (node == null) return;
+        if (node == null) {
+            return;
+        }
         if (depth - 1 == curDepth) {
             TreeNode tmp = node.left;
             TreeNode newLeft = new TreeNode(val);
@@ -806,8 +925,9 @@ public class LeetCodeTrainning {
      */
     public String largestNumber(int[] cost, int target) {
         int[] dp = new int[target + 1];
-        for (int i = 1; i < dp.length; i++)
+        for (int i = 1; i < dp.length; i++) {
             dp[i] = Integer.MIN_VALUE;
+        }
 
         for (int i = 0; i < cost.length; i++) {
             for (int j = cost[i]; j <= target; j++) {
@@ -815,7 +935,9 @@ public class LeetCodeTrainning {
             }
         }
 
-        if (dp[target] <= 0) return "0";
+        if (dp[target] <= 0) {
+            return "0";
+        }
 
         StringBuffer sb = new StringBuffer();
         for (int i = 8, j = target; i >= 0; i--) {
@@ -923,8 +1045,9 @@ public class LeetCodeTrainning {
      */
     public int lastStoneWeightII(int[] stones) {
         int sum = 0;
-        for (int stone : stones)
+        for (int stone : stones) {
             sum += stone;
+        }
         int target = sum / 2;
 
         int[][] dp = new int[stones.length][target + 1];
@@ -1014,10 +1137,12 @@ public class LeetCodeTrainning {
         }
         int cnt = 0;
         while (cnt < s.length()) {
-            for (int i = 0; i < numRows && cnt < s.length(); i++)
+            for (int i = 0; i < numRows && cnt < s.length(); i++) {
                 sbs[i].append(s.charAt(cnt++));
-            for (int i = numRows - 2; i > 0 && cnt < s.length(); i--)
+            }
+            for (int i = numRows - 2; i > 0 && cnt < s.length(); i--) {
                 sbs[i].append(s.charAt(cnt++));
+            }
         }
         for (int i = 1; i < numRows; i++) {
             sbs[0].append(sbs[i]);
@@ -1033,7 +1158,9 @@ public class LeetCodeTrainning {
      * @return
      */
     public ListNode getIntersectionNode1(ListNode headA, ListNode headB) {
-        if (headA == null || headB == null) return null;
+        if (headA == null || headB == null) {
+            return null;
+        }
         ListNode tmpA = headA, tmpB = headB;
         while (tmpA != tmpB) {
             tmpA = tmpA == null ? headB : tmpA.next;
@@ -1052,7 +1179,9 @@ public class LeetCodeTrainning {
 
         tmp = headB;
         while (tmp != null) {
-            if (set.contains(tmp)) return tmp;
+            if (set.contains(tmp)) {
+                return tmp;
+            }
             tmp = tmp.next;
         }
         return null;
@@ -1065,16 +1194,22 @@ public class LeetCodeTrainning {
      * @return
      */
     public int findMaxLength(int[] nums) {
-        if (nums.length < 2) return 0;
+        if (nums.length < 2) {
+            return 0;
+        }
 
         HashMap<Integer, Integer> zeroSubOne = new HashMap<>();
 
         int zeroCnt = 0;
         int max = 0;
         for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == 0) zeroCnt++;
+            if (nums[i] == 0) {
+                zeroCnt++;
+            }
             int tmp = zeroCnt - (i + 1 - zeroCnt);
-            if (tmp == 0) max = i + 1;
+            if (tmp == 0) {
+                max = i + 1;
+            }
             if (zeroSubOne.containsKey(tmp)) {
                 int idx = zeroSubOne.get(tmp);
                 max = Math.max(max, i - idx);
@@ -1098,10 +1233,14 @@ public class LeetCodeTrainning {
         for (int i = 0; i < nums.length; i++) {
             sum = sum + nums[i];
             int a = sum % k;
-            if (a == 0 && i >= 1) return true;
+            if (a == 0 && i >= 1) {
+                return true;
+            }
             if (map.containsKey(a)) {
                 int idx = map.get(a);
-                if (i - idx >= 2) return true;
+                if (i - idx >= 2) {
+                    return true;
+                }
             } else {
                 map.put(a, i);
             }
@@ -1226,8 +1365,12 @@ public class LeetCodeTrainning {
     private void getCombinationSum3(int k, int target, List<List<Integer>> res, List<Integer> tmpList, int idx) {
         if (target > 0) {
             for (int i = idx; i < 10; i++) {
-                if (target - i < 0 || tmpList.size() >= k) break;
-                if (tmpList.contains(i)) continue;
+                if (target - i < 0 || tmpList.size() >= k) {
+                    break;
+                }
+                if (tmpList.contains(i)) {
+                    continue;
+                }
                 tmpList.add(i);
                 getCombinationSum3(k, target - i, res, tmpList, i + 1);
                 tmpList.remove(tmpList.size() - 1);
@@ -1235,7 +1378,9 @@ public class LeetCodeTrainning {
 
         } else if (target == 0 && tmpList.size() == k) {
             List list = new ArrayList<>(tmpList);
-            if (!res.contains(list)) res.add(list);
+            if (!res.contains(list)) {
+                res.add(list);
+            }
         }
     }
 
@@ -1267,7 +1412,9 @@ public class LeetCodeTrainning {
             }
         } else if (target == 0) {
             List list = new ArrayList<>(tmpList);
-            if (!res.contains(list)) res.add(list);
+            if (!res.contains(list)) {
+                res.add(list);
+            }
         }
     }
 
@@ -1325,7 +1472,9 @@ public class LeetCodeTrainning {
                     }
                 }
             }
-            if (res.size() < dp[i].size()) res = dp[i];
+            if (res.size() < dp[i].size()) {
+                res = dp[i];
+            }
         }
         return res;
     }
@@ -1340,7 +1489,9 @@ public class LeetCodeTrainning {
     public int[] twoSum(int[] nums, int target) {
         HashMap<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(target - nums[i])) return new int[]{map.get(target - nums[i]), i};
+            if (map.containsKey(target - nums[i])) {
+                return new int[]{map.get(target - nums[i]), i};
+            }
             map.put(nums[i], i);
         }
         return new int[0];
@@ -1374,19 +1525,30 @@ public class LeetCodeTrainning {
         int rollSum = arr[0], rollMax = rollSum;
         // O(rows)
         for (int i = 1; i < arr.length; i++) {
-            if (rollSum > 0) rollSum += arr[i];
-            else rollSum = arr[i];
-            if (rollSum > rollMax) rollMax = rollSum;
+            if (rollSum > 0) {
+                rollSum += arr[i];
+            } else {
+                rollSum = arr[i];
+            }
+            if (rollSum > rollMax) {
+                rollMax = rollSum;
+            }
         }
-        if (rollMax <= k) return rollMax;
+        if (rollMax <= k) {
+            return rollMax;
+        }
         // O(rows ^ 2)
         int max = Integer.MIN_VALUE;
         for (int l = 0; l < arr.length; l++) {
             int sum = 0;
             for (int r = l; r < arr.length; r++) {
                 sum += arr[r];
-                if (sum > max && sum <= k) max = sum;
-                if (max == k) return k; // 尽量提前
+                if (sum > max && sum <= k) {
+                    max = sum;
+                }
+                if (max == k) {
+                    return k; // 尽量提前
+                }
             }
         }
         return max;
@@ -1403,9 +1565,12 @@ public class LeetCodeTrainning {
         int[] dp = new int[n + 1];
         dp[0] = 1;
         for (int i = 1; i <= n; i++) {
-            if (s.charAt(i - 1) != '0') dp[i] += dp[i - 1];
-            if (i > 1 && s.charAt(i - 2) != '0' && ((s.charAt(i - 2) - '0') * 10 + (s.charAt(i - 1) - '0') <= 26))
+            if (s.charAt(i - 1) != '0') {
+                dp[i] += dp[i - 1];
+            }
+            if (i > 1 && s.charAt(i - 2) != '0' && ((s.charAt(i - 2) - '0') * 10 + (s.charAt(i - 1) - '0') <= 26)) {
                 dp[i] += dp[i - 2];
+            }
         }
         return dp[n];
     }
@@ -1419,9 +1584,13 @@ public class LeetCodeTrainning {
      */
     public int strStr(String haystack, String needle) {
         int n = needle.length();
-        if (n == 0 || (n == haystack.length() && haystack.equals(needle))) return 0;
+        if (n == 0 || (n == haystack.length() && haystack.equals(needle))) {
+            return 0;
+        }
         for (int i = 0; i < haystack.length() - n + 1; i++) {
-            if (haystack.charAt(i) == needle.charAt(0) && haystack.substring(i, n + i).equals(needle)) return i;
+            if (haystack.charAt(i) == needle.charAt(0) && haystack.substring(i, n + i).equals(needle)) {
+                return i;
+            }
         }
         return -1;
     }
@@ -1451,8 +1620,12 @@ public class LeetCodeTrainning {
      * @return
      */
     public boolean isScramble(String s1, String s2) {
-        if (s1.length() != s2.length()) return false;
-        if (s1.equals(s2)) return true;
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        if (s1.equals(s2)) {
+            return true;
+        }
 
         Map<Character, Integer> map1 = new HashMap<>();
         Map<Character, Integer> map2 = new HashMap<>();
@@ -1462,14 +1635,15 @@ public class LeetCodeTrainning {
             map2.put(s2.charAt(i), map2.getOrDefault(s2.charAt(i), 0) + 1);
         }
         for (Character ch : map1.keySet()) {
-            if (map1.get(ch) != map2.get(ch)) {
+            if (!map1.get(ch).equals(map2.get(ch))) {
                 return false;
             }
         }
 
         for (int i = 1; i < s1.length(); i++) {
-            if (isScramble(s1.substring(0, i), s2.substring(0, i)) && isScramble(s1.substring(i), s2.substring(i)) || isScramble(s1.substring(0, i), s2.substring(s1.length() - i)) && isScramble(s1.substring(i), s2.substring(0, s1.length() - i)))
+            if (isScramble(s1.substring(0, i), s2.substring(0, i)) && isScramble(s1.substring(i), s2.substring(i)) || isScramble(s1.substring(0, i), s2.substring(s1.length() - i)) && isScramble(s1.substring(i), s2.substring(0, s1.length() - i))) {
                 return true;
+            }
         }
         return false;
     }
@@ -1482,7 +1656,9 @@ public class LeetCodeTrainning {
      */
     public int removeDuplicates(int[] nums) {
         int n = nums.length, left = 0, right = 1;
-        if (n < 2) return n;
+        if (n < 2) {
+            return n;
+        }
         while (right < n) {
             while (right < n && nums[left] >= nums[right]) {
                 right++;
@@ -1491,7 +1667,9 @@ public class LeetCodeTrainning {
             if (left != right) {
                 nums[left] = nums[right];
             }
-            if (right == n - 1) break;
+            if (right == n - 1) {
+                break;
+            }
         }
         return left + 1;
     }
@@ -1508,13 +1686,19 @@ public class LeetCodeTrainning {
         TreeSet<Long> set = new TreeSet<>();
         int n = nums.length;
         for (int i = 0; i < n; i++) {
-            Long num = 1l * nums[i];
+            Long num = 1L * nums[i];
             Long l = set.floor(num);
             Long b = set.ceiling(num);
-            if (null != l && num - l <= t) return true;
-            if (null != b && b - num <= t) return true;
+            if (null != l && num - l <= t) {
+                return true;
+            }
+            if (null != b && b - num <= t) {
+                return true;
+            }
             set.add(num);
-            if (i >= k) set.remove(nums[i - k] * 1l);
+            if (i >= k) {
+                set.remove(nums[i - k] * 1L);
+            }
         }
         return false;
     }
@@ -1532,8 +1716,12 @@ public class LeetCodeTrainning {
      * @return
      */
     public int rob(int[] nums) {
-        if (nums.length == 0) return 0;
-        if (nums.length == 1) return nums[0];
+        if (nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
         int n = nums.length;
         return Math.max(robTool(Arrays.copyOfRange(nums, 0, n - 1)), robTool(Arrays.copyOfRange(nums, 1, n)));
     }
@@ -1644,7 +1832,9 @@ public class LeetCodeTrainning {
          */
         public boolean startsWith(String prefix) {
             for (String str : set) {
-                if (str.startsWith(prefix)) return true;
+                if (str.startsWith(prefix)) {
+                    return true;
+                }
             }
             return false;
         }
@@ -1662,7 +1852,9 @@ public class LeetCodeTrainning {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == word.charAt(0)) {
-                    if (exsitDFS(board, word, visited, 0, i, j)) return true;
+                    if (exsitDFS(board, word, visited, 0, i, j)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -1670,14 +1862,25 @@ public class LeetCodeTrainning {
     }
 
     private boolean exsitDFS(char[][] board, String word, boolean[][] visited, int wordIdx, int row, int col) {
-        if (!(row >= 0 && row < board.length && col >= 0 && col < board[0].length) || board[row][col] != word.charAt(wordIdx) || visited[row][col])
+        if (!(row >= 0 && row < board.length && col >= 0 && col < board[0].length) || board[row][col] != word.charAt(wordIdx) || visited[row][col]) {
             return false;
-        if (wordIdx == word.length() - 1) return true;
+        }
+        if (wordIdx == word.length() - 1) {
+            return true;
+        }
         visited[row][col] = true;
-        if (exsitDFS(board, word, visited, wordIdx + 1, row - 1, col)) return true;
-        if (exsitDFS(board, word, visited, wordIdx + 1, row + 1, col)) return true;
-        if (exsitDFS(board, word, visited, wordIdx + 1, row, col - 1)) return true;
-        if (exsitDFS(board, word, visited, wordIdx + 1, row, col + 1)) return true;
+        if (exsitDFS(board, word, visited, wordIdx + 1, row - 1, col)) {
+            return true;
+        }
+        if (exsitDFS(board, word, visited, wordIdx + 1, row + 1, col)) {
+            return true;
+        }
+        if (exsitDFS(board, word, visited, wordIdx + 1, row, col - 1)) {
+            return true;
+        }
+        if (exsitDFS(board, word, visited, wordIdx + 1, row, col + 1)) {
+            return true;
+        }
         visited[row][col] = false;
         return false;
     }
@@ -1693,13 +1896,17 @@ public class LeetCodeTrainning {
         inOrder(root, list);
         int min = Integer.MAX_VALUE;
         for (int i = 1; i < list.size(); i++) {
-            if (list.get(i) - list.get(i - 1) < min) min = list.get(i) - list.get(i - 1);
+            if (list.get(i) - list.get(i - 1) < min) {
+                min = list.get(i) - list.get(i - 1);
+            }
         }
         return min;
     }
 
     private void inOrder(TreeNode root, List<Integer> list) {
-        if (root == null) return;
+        if (root == null) {
+            return;
+        }
         inOrder(root.left, list);
         list.add(root.val);
         inOrder(root.right, list);
@@ -1738,7 +1945,9 @@ public class LeetCodeTrainning {
      * @return
      */
     public boolean isUgly(int n) {
-        if (n < 1) return false;
+        if (n < 1) {
+            return false;
+        }
         while (n % 2 == 0) {
             n = n / 2;
         }
@@ -1791,14 +2000,19 @@ public class LeetCodeTrainning {
         int n = nums.length;
         int[] min = new int[n];
         min[0] = nums[0];
-        for (int i = 1; i < n; i++)
+        for (int i = 1; i < n; i++) {
             min[i] = Math.min(min[i - 1], nums[i]);
+        }
 
         Deque<Integer> stack = new LinkedList<>();
         for (int i = n - 1; i >= 0; i--) {
             if (nums[i] > min[i]) {
-                while (!stack.isEmpty() && stack.peek() <= min[i]) stack.pop();
-                if (!stack.isEmpty() && stack.peek() < nums[i]) return true;
+                while (!stack.isEmpty() && stack.peek() <= min[i]) {
+                    stack.pop();
+                }
+                if (!stack.isEmpty() && stack.peek() < nums[i]) {
+                    return true;
+                }
                 stack.push(nums[i]);
             }
         }
@@ -1954,7 +2168,9 @@ public class LeetCodeTrainning {
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                if (rawSet.get(i) || colSet.get(j)) matrix[i][j] = 0;
+                if (rawSet.get(i) || colSet.get(j)) {
+                    matrix[i][j] = 0;
+                }
             }
         }
     }
@@ -1969,7 +2185,9 @@ public class LeetCodeTrainning {
             tmpHead = tmpHead.next;
             length++;
         }
-        if (length < right || left == right) return head;
+        if (length < right || left == right) {
+            return head;
+        }
 
         int cnt = 1;
         ListNode realHead = new ListNode(-1);
@@ -2005,21 +2223,33 @@ public class LeetCodeTrainning {
         int[][] res = new int[n][n];
         int count = 1, row = 0, col = 0, endRow = n - 1, endCol = n - 1;
         while (count <= n * n) {
-            for (int i = col; i <= endCol; i++)
+            for (int i = col; i <= endCol; i++) {
                 res[row][i] = count++;
-            if (count == 0) return res;
+            }
+            if (count == 0) {
+                return res;
+            }
 
-            for (int i = row + 1; i <= endRow; i++)
+            for (int i = row + 1; i <= endRow; i++) {
                 res[i][endCol] = count++;
-            if (count == 0) return res;
+            }
+            if (count == 0) {
+                return res;
+            }
 
-            for (int i = endCol - 1; i >= col; i--)
+            for (int i = endCol - 1; i >= col; i--) {
                 res[endRow][i] = count++;
-            if (count == 0) return res;
+            }
+            if (count == 0) {
+                return res;
+            }
 
-            for (int i = endRow - 1; i > row; i--)
+            for (int i = endRow - 1; i > row; i--) {
                 res[i][col] = count++;
-            if (count == 0) return res;
+            }
+            if (count == 0) {
+                return res;
+            }
 
             row++;
             col++;
@@ -2036,26 +2266,40 @@ public class LeetCodeTrainning {
      * @return
      */
     public int[] spiralOrder(int[][] matrix) {
-        if (null == matrix || matrix.length == 0) return new int[0];
+        if (null == matrix || matrix.length == 0) {
+            return new int[0];
+        }
         int r = matrix.length, c = matrix[0].length;
         int[] res = new int[r * c];
         int count = 0, row = 0, col = 0, endRow = r - 1, endCol = c - 1;
         while (count < res.length) {
-            for (int i = col; i <= endCol; i++)
+            for (int i = col; i <= endCol; i++) {
                 res[count++] = matrix[row][i];
-            if (count == res.length) return res;
+            }
+            if (count == res.length) {
+                return res;
+            }
 
-            for (int i = row + 1; i <= endRow; i++)
+            for (int i = row + 1; i <= endRow; i++) {
                 res[count++] = matrix[i][endCol];
-            if (count == res.length) return res;
+            }
+            if (count == res.length) {
+                return res;
+            }
 
-            for (int i = endCol - 1; i >= col; i--)
+            for (int i = endCol - 1; i >= col; i--) {
                 res[count++] = matrix[endRow][i];
-            if (count == res.length) return res;
+            }
+            if (count == res.length) {
+                return res;
+            }
 
-            for (int i = endRow - 1; i > row; i--)
+            for (int i = endRow - 1; i > row; i--) {
                 res[count++] = matrix[i][col];
-            if (count == res.length) return res;
+            }
+            if (count == res.length) {
+                return res;
+            }
 
             row++;
             col++;
@@ -2118,7 +2362,9 @@ public class LeetCodeTrainning {
         }
 
         public void add(int key) {
-            if (hashSet.get(key)) return;
+            if (hashSet.get(key)) {
+                return;
+            }
             hashSet.set(key);
         }
 
@@ -2155,7 +2401,9 @@ public class LeetCodeTrainning {
                     i++;
                 }
                 int top = stack.pop() - 1;
-                if (top > 0) stack.push(top);
+                if (top > 0) {
+                    stack.push(top);
+                }
                 stack.push(2);
             } else if ('#' == preorder.charAt(i)) {
                 int top = stack.pop() - 1;
@@ -2212,7 +2460,9 @@ public class LeetCodeTrainning {
      */
     public double[] medianSlidingWindow(int[] nums, int k) {
         int n = nums.length;
-        if (n < k) return null;
+        if (n < k) {
+            return null;
+        }
         PriorityQueue<Double> small = new PriorityQueue<>(new Comparator<Double>() {
             @Override
             public int compare(Double o1, Double o2) {
@@ -2288,7 +2538,9 @@ public class LeetCodeTrainning {
      * 896. 单调数列
      */
     public boolean isMonotonic(int[] A) {
-        if (A.length <= 2) return true;
+        if (A.length <= 2) {
+            return true;
+        }
         int flag = 0; //0:=  1:<  2:>
         for (int i = 1; i < A.length; i++) {
             int diff = A[i] - A[i - 1];
@@ -2301,9 +2553,13 @@ public class LeetCodeTrainning {
                     continue;
                 }
             } else if (flag == 1) {
-                if (diff < 0) return false;
+                if (diff < 0) {
+                    return false;
+                }
             } else {
-                if (diff > 0) return false;
+                if (diff > 0) {
+                    return false;
+                }
             }
         }
         return true;
@@ -2314,8 +2570,9 @@ public class LeetCodeTrainning {
      */
     public int longestSubstring(String s, int k) {
         Map<Character, Integer> map = new HashMap<>();
-        for (char ch : s.toCharArray())
+        for (char ch : s.toCharArray()) {
             map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
         for (char ch : map.keySet()) {
             if (map.get(ch) < k) {
                 int cnt = 0;
@@ -2332,14 +2589,17 @@ public class LeetCodeTrainning {
      * 856.括号的分数
      */
     public int scoreOfParentheses(String S) {
-        if (null == S || S.length() == 0) return 0;
+        if (null == S || S.length() == 0) {
+            return 0;
+        }
         Stack<Character> stack = new Stack<>();
         int score = 0;
         char[] chars = S.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             char ch = chars[i];
-            if (ch == '(') stack.push(ch);
-            else {
+            if (ch == '(') {
+                stack.push(ch);
+            } else {
                 stack.pop();
                 if (chars[i - 1] == '(') {
                     score += Math.pow(2, stack.size());
@@ -2418,7 +2678,9 @@ public class LeetCodeTrainning {
      * 413. 等差数列划分
      */
     public int numberOfArithmeticSlices(int[] A) {
-        if (null == A || A.length <= 2) return 0;
+        if (null == A || A.length <= 2) {
+            return 0;
+        }
         int[] diff = new int[A.length];
         for (int i = 1; i < A.length; i++) {
             diff[i] = A[i] - A[i - 1];
@@ -2429,7 +2691,9 @@ public class LeetCodeTrainning {
                 right++;
             }
             int cnt = right - left + 1;
-            if (cnt > 2) res += (cnt + 1) * cnt / 2 - 2 * cnt + 1;
+            if (cnt > 2) {
+                res += (cnt + 1) * cnt / 2 - 2 * cnt + 1;
+            }
             left = right;
         }
         return res;
@@ -2473,7 +2737,9 @@ public class LeetCodeTrainning {
     }
 
     public int findShortestSubArray1(int[] nums) {
-        if (null == nums || nums.length == 0) return 0;
+        if (null == nums || nums.length == 0) {
+            return 0;
+        }
         int maxCnt = 1, shortest = 1;
         for (int i = 0; i < nums.length - 1; i++) {
             int cnt = 1;
@@ -2499,9 +2765,13 @@ public class LeetCodeTrainning {
         int max = Integer.MIN_VALUE, zero = 0, left = 0;
 
         for (int right = 0; right < A.length; right++) {
-            if (A[right] == 0) zero++;
+            if (A[right] == 0) {
+                zero++;
+            }
             while (zero > K) {
-                if (A[left] == 0) zero--;
+                if (A[left] == 0) {
+                    zero--;
+                }
                 left++;
             }
             max = Math.max(right - left + 1, max);
@@ -2521,7 +2791,9 @@ public class LeetCodeTrainning {
         int min = Integer.MAX_VALUE;
         for (int i = 1; i < mins.length; i++) {
             min = Math.min(min, mins[i] - mins[i - 1]);
-            if (min == 0) return min;
+            if (min == 0) {
+                return min;
+            }
         }
         return Math.min(min, 1440 + mins[0] - mins[mins.length - 1]);
     }
@@ -2569,9 +2841,13 @@ public class LeetCodeTrainning {
         int cnt = 0;
         Deque<Integer> queue = new LinkedList<>();
         for (int i = 0; i < A.length; i++) {
-            if (!queue.isEmpty() && queue.getLast() == i - K) queue.pollLast();
+            if (!queue.isEmpty() && queue.getLast() == i - K) {
+                queue.pollLast();
+            }
             if ((queue.size() + A[i]) % 2 == 0) {
-                if (i + K > A.length) return -1;
+                if (i + K > A.length) {
+                    return -1;
+                }
                 cnt++;
                 queue.push(i);
             }
@@ -2584,7 +2860,9 @@ public class LeetCodeTrainning {
      */
     public String maxSubLenNum(String s) {
         String[] strs = s.split("\\.");
-        if (strs == null || strs.length < 2) return "";
+        if (strs == null || strs.length < 2) {
+            return "";
+        }
         boolean[] flag = new boolean[strs.length];
         for (int i = 0; i < strs.length; i++) {
             flag[i] = isNum(strs[i]);
@@ -2598,12 +2876,17 @@ public class LeetCodeTrainning {
                 }
             }
         }
-        if (maxIdx == 0) return "";
-        else return strs[maxIdx - 1] + "." + strs[maxIdx];
+        if (maxIdx == 0) {
+            return "";
+        } else {
+            return strs[maxIdx - 1] + "." + strs[maxIdx];
+        }
     }
 
     public boolean isNum(String s) {
-        if (s.length() == 0) return false;
+        if (s.length() == 0) {
+            return false;
+        }
         for (int i = 0; i < s.length(); i++) {
             if (!(s.charAt(i) >= 48 && s.charAt(i) <= 57)) {
                 return false;
@@ -2617,7 +2900,9 @@ public class LeetCodeTrainning {
      */
     public int[][] matrixReshape(int[][] nums, int r, int c) {
         int n = nums.length, m = nums[0].length;
-        if (n * m != r * c) return nums;
+        if (n * m != r * c) {
+            return nums;
+        }
         int[][] res = new int[r][c];
         int cnt = 0;
         while (cnt < n * m) {
@@ -2666,7 +2951,9 @@ public class LeetCodeTrainning {
             bs.set(nums[i] - 1, true);
         }
         for (int i = 0; i < nums.length; i++) {
-            if (bs.get(i) == false) res.add(i + 1);
+            if (bs.get(i) == false) {
+                res.add(i + 1);
+            }
         }
         return res;
     }
@@ -2697,8 +2984,9 @@ public class LeetCodeTrainning {
     public LeetCodeTrainning(int k, int[] nums) {
         kthArrQueuq = new PriorityQueue<>();
         kTh = k;
-        for (int num : nums)
+        for (int num : nums) {
             add(num);
+        }
     }
 
     public int add(int val) {
@@ -2714,7 +3002,9 @@ public class LeetCodeTrainning {
      * 567. 字符串的排列
      */
     public boolean checkInclusion1(String s1, String s2) {
-        if (s2.length() < s1.length()) return false;
+        if (s2.length() < s1.length()) {
+            return false;
+        }
 
         Map<Character, Integer> map = new HashMap<>();
         for (int i = 0; i < s1.length(); i++) {
@@ -2725,10 +3015,14 @@ public class LeetCodeTrainning {
             }
         }
         for (int i = 0; i < s1.length(); i++) {
-            if (map.containsKey(s2.charAt(i))) map.put(s2.charAt(i), map.get(s2.charAt(i)) - 1);
+            if (map.containsKey(s2.charAt(i))) {
+                map.put(s2.charAt(i), map.get(s2.charAt(i)) - 1);
+            }
         }
 
-        if (checkMapValueZero(map)) return true;
+        if (checkMapValueZero(map)) {
+            return true;
+        }
         int left = 0, right = s1.length();
         while (right < s2.length()) {
             if (map.containsKey(s2.charAt(left))) {
@@ -2739,7 +3033,9 @@ public class LeetCodeTrainning {
             }
             left++;
             right++;
-            if (checkMapValueZero(map)) return true;
+            if (checkMapValueZero(map)) {
+                return true;
+            }
         }
         return false;
     }
@@ -2748,13 +3044,17 @@ public class LeetCodeTrainning {
         boolean[] isAllEmpty = new boolean[1];
         isAllEmpty[0] = true;
         map.forEach((k, v) -> {
-            if (v != 0) isAllEmpty[0] = false;
+            if (v != 0) {
+                isAllEmpty[0] = false;
+            }
         });
         return isAllEmpty[0];
     }
 
     public boolean checkInclusion(String s1, String s2) {
-        if (s2.length() < s1.length()) return false;
+        if (s2.length() < s1.length()) {
+            return false;
+        }
 
         int[] letterCount = new int[26];
         for (int i = 0; i < s1.length(); i++) {
@@ -2780,14 +3080,18 @@ public class LeetCodeTrainning {
 
             }
 
-            if (checkLettersEmpty(letterCountTmp)) return true;
+            if (checkLettersEmpty(letterCountTmp)) {
+                return true;
+            }
         }
         return false;
     }
 
     public boolean checkLettersEmpty(int[] letterCount) {
         for (int i = 0; i < letterCount.length; i++) {
-            if (letterCount[i] > 0) return false;
+            if (letterCount[i] > 0) {
+                return false;
+            }
         }
         return true;
     }
@@ -2829,7 +3133,9 @@ public class LeetCodeTrainning {
         int res = 1, left = 0, right = 0;
         while (right < n - 1) {
             if (left == right) {
-                if (arr[left] == arr[left + 1]) left++;
+                if (arr[left] == arr[left + 1]) {
+                    left++;
+                }
                 right++;
             } else {
                 if (arr[right - 1] < arr[right] && arr[right] > arr[right + 1]) {
@@ -2852,9 +3158,13 @@ public class LeetCodeTrainning {
         int[] num = new int[nums1.length + nums2.length];
 
         int idx1 = 0, idx2 = 0, idx = 0;
-        if (nums1.length == 0) num = nums2;
+        if (nums1.length == 0) {
+            num = nums2;
+        }
 
-        if (nums2.length == 0) num = nums1;
+        if (nums2.length == 0) {
+            num = nums1;
+        }
         while (nums1.length > 0 && nums2.length > 0 && idx1 < nums1.length && idx2 < nums2.length) {
             while (idx1 < nums1.length && nums1[idx1] <= nums2[idx2]) {
                 num[idx++] = nums1[idx1++];
@@ -2874,8 +3184,11 @@ public class LeetCodeTrainning {
             }
         }
 
-        if (num.length % 2 == 0) return (num[num.length / 2] + num[num.length / 2 - 1]) / 2.0d;
-        else return num[num.length / 2];
+        if (num.length % 2 == 0) {
+            return (num[num.length / 2] + num[num.length / 2 - 1]) / 2.0d;
+        } else {
+            return num[num.length / 2];
+        }
 
     }
 
@@ -2883,11 +3196,15 @@ public class LeetCodeTrainning {
      * 665. Non-decreasing Array
      */
     public boolean checkPossibility(int[] nums) {
-        if (null == nums || nums.length <= 1) return true;
+        if (null == nums || nums.length <= 1) {
+            return true;
+        }
         boolean flag = false;
         for (int i = 0; i < nums.length - 1; i++) {
             if (nums[i] > nums[i + 1]) {
-                if (flag) return false;
+                if (flag) {
+                    return false;
+                }
                 flag = true;
                 if (i > 0 && nums[i - 1] > nums[i + 1]) {
                     nums[i + 1] = nums[i];
@@ -2905,10 +3222,13 @@ public class LeetCodeTrainning {
      */
     public int maxScore(int[] cardPoints, int k) {
         int n = cardPoints.length;
-        if (n < k) return 0;
+        if (n < k) {
+            return 0;
+        }
         int sum = 0;
-        for (int card : cardPoints)
+        for (int card : cardPoints) {
             sum += card;
+        }
         int start = 0, end = 0, subSum = 0;
         while (end - start < n - k) {
             subSum += cardPoints[end];
@@ -2946,7 +3266,9 @@ public class LeetCodeTrainning {
      * 101. Symmetric Tree
      */
     public boolean isSymmetric(TreeNode root) {
-        if (root == null) return true;
+        if (root == null) {
+            return true;
+        }
         return subIsSymmetric(root.left, root.right);
         //        return check(root, root);
     }
@@ -2975,7 +3297,9 @@ public class LeetCodeTrainning {
             if (n1 == null && n2 == null) {
                 continue;
             }
-            if ((n1 == null || n2 == null) || (n1.val != n2.val)) return false;
+            if ((n1 == null || n2 == null) || (n1.val != n2.val)) {
+                return false;
+            }
             queue.offer(n1.left);
             queue.offer(n2.right);
 
@@ -3014,7 +3338,9 @@ public class LeetCodeTrainning {
 
     public String getDay(String day) {
         // day is < 10
-        if (day.length() == 3) return "0" + day.substring(0, 1);
+        if (day.length() == 3) {
+            return "0" + day.substring(0, 1);
+        }
         // day is >= 10
         return day.substring(0, 2);
     }
@@ -3078,8 +3404,11 @@ public class LeetCodeTrainning {
         for (int i = 0; i < nums.length; i++) {
             if (map.containsKey(nums[i])) {
                 int j = map.get(nums[i]);
-                if (i - j <= k) return true;
-                else map.put(nums[i], i);
+                if (i - j <= k) {
+                    return true;
+                } else {
+                    map.put(nums[i], i);
+                }
             } else {
                 map.put(nums[i], i);
             }
@@ -3161,7 +3490,9 @@ public class LeetCodeTrainning {
     }
 
     public static int[] mostCompetitive(int[] nums, int k) {
-        if (nums.length <= k) return nums;
+        if (nums.length <= k) {
+            return nums;
+        }
         List<Integer> list = new ArrayList<>();
         findMin(nums, list, k, 0, nums.length - k + list.size() + 1);
         int[] res = new int[k];
@@ -3172,7 +3503,9 @@ public class LeetCodeTrainning {
     }
 
     private static void findMin(int[] nums, List<Integer> list, int k, int pre, int end) {
-        if (list.size() >= k) return;
+        if (list.size() >= k) {
+            return;
+        }
         int min = nums[pre];
         int index = pre;
         for (int i = pre; i < end; i++) {
@@ -3286,7 +3619,9 @@ public class LeetCodeTrainning {
         for (int i = 1; i <= n; i++) {
             int oddSum = sums[n][1] - sums[i][1] + sums[i - 1][0];
             int evenSum = sums[n][0] - sums[i][0] + sums[i - 1][1];
-            if (oddSum == evenSum) count++;
+            if (oddSum == evenSum) {
+                count++;
+            }
         }
 
         return count;
@@ -3296,7 +3631,7 @@ public class LeetCodeTrainning {
      * 1091. Shortest Path in Binary Matrix
      */
     public static int shortestPathBinaryMatrix(int[][] grid) {
-        int idx[] = new int[2];
+        int[] idx = new int[2];
         idx[0] = idx[1] = 0;
         int res = search(grid, 0, 0, 0);
         return res == Integer.MAX_VALUE ? -1 : res + 1;
@@ -3304,9 +3639,13 @@ public class LeetCodeTrainning {
 
     private static int search(int[][] grid, int row, int col, int length) {
         if (row == col && row == grid.length - 1) {
-            if (grid[row][col] == 0) return length;
+            if (grid[row][col] == 0) {
+                return length;
+            }
         }
-        if (grid[row][col] == 1) return Integer.MAX_VALUE;
+        if (grid[row][col] == 1) {
+            return Integer.MAX_VALUE;
+        }
         length++;
         int left = Integer.MAX_VALUE, right = Integer.MAX_VALUE, mid = Integer.MAX_VALUE;
 
@@ -3390,7 +3729,9 @@ public class LeetCodeTrainning {
         }
         Queue<Integer> queue = new ArrayDeque<>();
         for (int i = 0; i < numCourses; i++) {
-            if (preNodeNum[i] == 0) queue.offer(i);
+            if (preNodeNum[i] == 0) {
+                queue.offer(i);
+            }
         }
         int[] res = new int[numCourses];
         Set<Integer> set = new HashSet<>();
@@ -3435,14 +3776,18 @@ public class LeetCodeTrainning {
      * reverse list nodes by k
      */
     public static ListNode reverseNodes(ListNode head, int k) {
-        if (null == head || null == head.next) return head;
+        if (null == head || null == head.next) {
+            return head;
+        }
         int num = 0;
         ListNode current = head;
         while (current != null) {
             num++;
             current = current.next;
         }
-        if (num < k) return head;
+        if (num < k) {
+            return head;
+        }
         int times = num / k;
         ListNode tmpHead = new ListNode(-1);
         ListNode pre = null, tail, post = null;
@@ -3461,7 +3806,9 @@ public class LeetCodeTrainning {
             }
             tail.next = pre;
             pre = current;
-            if (i == 0) head = tail.next;
+            if (i == 0) {
+                head = tail.next;
+            }
         }
         tmpHead.next = post;
         return head;
@@ -3471,7 +3818,9 @@ public class LeetCodeTrainning {
      * reverse list nodes
      */
     public static ListNode reverseNodes(ListNode head) {
-        if (null == head || null == head.next) return head;
+        if (null == head || null == head.next) {
+            return head;
+        }
         ListNode current = head;
         ListNode pre = null;
         ListNode post;
@@ -3488,7 +3837,9 @@ public class LeetCodeTrainning {
      * 148. Sort List
      */
     public static ListNode sortList(ListNode head) {
-        if (null == head) return head;
+        if (null == head) {
+            return head;
+        }
 
         ArrayList<Integer> values = new ArrayList<>();
         ListNode tmp = head;
@@ -3515,8 +3866,12 @@ public class LeetCodeTrainning {
     public static int minDistance(String word1, String word2) {
         int[][] dp = new int[word1.length() + 1][word2.length() + 1];
 
-        for (int i = 0; i < word1.length() + 1; i++) dp[i][0] = i;
-        for (int i = 0; i < word2.length() + 1; i++) dp[0][i] = i;
+        for (int i = 0; i < word1.length() + 1; i++) {
+            dp[i][0] = i;
+        }
+        for (int i = 0; i < word2.length() + 1; i++) {
+            dp[0][i] = i;
+        }
         char c1, c2;
         for (int i = 1; i < word1.length() + 1; i++) {
             for (int j = 1; j < word2.length() + 1; j++) {
